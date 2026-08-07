@@ -54,3 +54,16 @@ python demo.py
 
 \- No currency conversion
 
+---
+
+## Related projects
+
+Same author, same principle applied elsewhere:
+
+- [agentic-wallet-guardian-v3](https://github.com/rudimentall1/agentic-wallet-guardian-v3) -
+  a security decision layer for AI agents transacting on-chain. MIT,
+  101 tests.
+- [agent-guardrail](https://github.com/rudimentall1/agent-guardrail) -
+  a generic policy firewall for AI agent tool calls (not
+  blockchain-specific). Published on PyPI, MIT, 46 tests.
+  
