@@ -1,0 +1,7 @@
+payment_limits:
+  max_amount: 50.0
+  allowed_recipients: []
+  blocked_recipients:
+    - "0xBAD0000000000000000000000000000000BAD0"
+  max_payments_per_window: 5
+  window_seconds: 60
