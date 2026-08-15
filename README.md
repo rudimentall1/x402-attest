@@ -16,6 +16,7 @@ required. Tampering with a decision after the fact is detectable.
 pip install cryptography pyyaml
 python demo.py
 python demo_x402.py
+python demo_eip3009.py
 
 ## Files
 
@@ -30,14 +31,31 @@ python demo_x402.py
 - `demo_x402.py` — 3 scenarios against real `PAYMENT-REQUIRED` header
   bytes: within policy, exceeds `max_amount`, unrecognized asset (refused
   rather than guessed)
+- `eip3009.py` — builds (never signs) the unsigned EIP-712 typed-data
+  structure for EIP-3009 `TransferWithAuthorization`, the message a
+  payer's own wallet would sign to complete a gasless x402 USDC payment.
+  Domain (name/version/verifyingContract) is only filled in for
+  specifically verified token+network pairs (currently USDC on Base and
+  Ethereum mainnet, cross-checked against Circle's own announcement and
+  BaseScan/Etherscan) - an unrecognized pair returns `None` rather than
+  a guessed domain, which would produce a validly-shaped but silently
+  unverifiable signature. Structurally validated against a real EIP-712
+  encoder (`eth_account`) during development, including a full
+  sign/recover round-trip with a throwaway test key - not shipped as a
+  dependency of this module, which touches no signing library and no
+  key at all.
+- `demo_eip3009.py` — builds a real TransferWithAuthorization message
+  for USDC on Base; shows the unrecognized-asset refusal
 
 ## What's missing before this is more than a demo
 
 - Rate-limit state is in-memory only (dies on restart)
-- `PAYMENT-REQUIRED` parsing is real (see `x402_hook.py`); constructing
-  and signing the client's own `PAYMENT-SIGNATURE` response (EIP-3009)
-  is not implemented - this evaluates and attests to a policy decision
-  about an offer, it doesn't complete a real payment
+- `PAYMENT-REQUIRED` parsing is real (see `x402_hook.py`). The unsigned
+  `PAYMENT-SIGNATURE` message is now built for verified token+network
+  pairs (see `eip3009.py`) - actually producing the signature requires
+  the payer's own wallet/private key, which is deliberately outside
+  this project's scope, the same boundary this author holds in
+  agentic-wallet-guardian-v3's transaction builder.
 - No key rotation / key management story
 - No currency conversion
 
@@ -47,6 +65,6 @@ python demo_x402.py
 
 Same author, same principle applied elsewhere:
 
-- [agentic-wallet-guardian-v3](https://github.com/rudimentall1/agentic-wallet-guardian-v3) - a security decision layer for AI agents transacting on-chain. MIT, 101 tests.
-- [agent-guardrail](https://github.com/rudimentall1/agent-guardrail) - a generic policy firewall for AI agent tool calls (not blockchain-specific). Published on PyPI, MIT, 46 tests.
+- [agentic-wallet-guardian-v3](https://github.com/rudimentall1/agentic-wallet-guardian-v3) - a security decision layer for AI agents transacting on-chain. MIT, 131 tests.
+- [agent-guardrail](https://github.com/rudimentall1/agent-guardrail) - a generic policy firewall for AI agent tool calls (not blockchain-specific). Published on PyPI, MIT, 59 tests.
 - [open-agent-attestation](https://github.com/rudimentall1/open-agent-attestation) - vendor-neutral open spec (JWT+EdDSA) generalizing the signing approach used here into a format any tool can emit/verify. Draft v0.1.
