@@ -2,6 +2,8 @@
 
 Proof of concept, not a product.
 
+📄 [Read the white paper](docs/whitepaper.pdf)
+
 Cryptographically signed attestations for agent-to-agent payment
 policy decisions. A payment intent is evaluated against a YAML policy
 (amount cap, blocklist, rate limit) and the ALLOW/BLOCK decision is
